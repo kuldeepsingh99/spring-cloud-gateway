@@ -1,1 +1,212 @@
-Hello
+# Micro Service 1 (ms1)
+
+* Webflux is used
+* Resilience4j library is used
+* Circuit Breaker, Bulkahead, Ratelimiter, Timelimiter, Retry and aggregate Pattern are implemented
+* Jaeger is configured for distributed tracing
+* Prometheus endpoint is also enabled
+* Keycload is also enabled for token validation
+
+## Circuit Breaker
+
+Configure the Cricuit breaker configuration
+```
+resilience4j:
+  retry:
+    instances:
+      retryService:
+        max-retry-attempts: 3
+        wait-duration: 5s
+        enable-exponential-backoff: true
+        exponential-backoff-multiplier: 2
+        
+  circuitbreaker:
+    instances:
+      mainService:
+        minimum-number-of-calls: 5
+        permitted-number-of-calls-in-half-open-state: 2
+        wait-duration-in-open-state: 10s
+        failure-rate-threshold: 50
+        event-consumer-buffer-size: 10
+        automatic-transition-from-open-to-half-open-enabled: true
+        register-health-indicator: true
+        sliding-window-size: 10
+        sliding-window-type: COUNT_BASED
+    circuit-breaker-aspect-order: 2
+```
+
+
+Enable the Circuit Breaker on any method. If any exception occurs in the method then circuit breaker will open
+```
+@GetMapping(value = "/checkrequest")
+@CircuitBreaker(name = "mainService", fallbackMethod = "fallback")
+@RateLimiter(name = "ratelimiterservice", fallbackMethod = "fallback")
+@TimeLimiter(name = "timelimiterservice", fallbackMethod = "fallback")
+@Bulkhead(name = "bulkaheadservice",fallbackMethod = "fallback")
+@Retry(name="retryService")
+@Timed(value = "TestController.checkrequest",description = "checkrequest" ,histogram = true)
+public Mono<String> checkrequest() {
+
+  System.out.println("inside checkrequest");
+
+  Mono<String> mono2 = ms2WebClient.get().uri("/checkrequestcall").retrieve().bodyToMono(String.class);
+
+  Mono<String> mono3 = ms3WebClient.get().uri("/checkrequestcall").retrieve().bodyToMono(String.class);
+
+  return Mono.zip(mono2, mono3).map(tuple -> {
+    return tuple.getT2();
+  });
+
+}
+```
+
+## [Rate Limiter](https://resilience4j.readme.io/docs/ratelimiter)
+
+Rate limiting is an imperative technique to prepare your API for scale and establish high availability and reliability of your service. In this example 100 calls are allowed in 5 sec
+
+Configure rate limiter in application.yml
+
+```
+ratelimiter:
+  instances:
+    ratelimiterservice:
+      limit-for-period: 100
+      limit-refresh-period: 5s
+      timeout-duration: 0
+      allow-health-indicator-to-fail: true
+      register-health-indicator: true        
+  rate-limiter-aspect-order: 1
+```
+
+Apply Rate Limiter on any method with annotatations
+```
+@GetMapping(value = "/checkrequest")
+@CircuitBreaker(name = "mainService", fallbackMethod = "fallback")
+@RateLimiter(name = "ratelimiterservice", fallbackMethod = "fallback")
+@TimeLimiter(name = "timelimiterservice", fallbackMethod = "fallback")
+@Bulkhead(name = "bulkaheadservice",fallbackMethod = "fallback")
+@Retry(name="retryService")
+@Timed(value = "TestController.checkrequest",description = "checkrequest" ,histogram = true)
+public Mono<String> checkrequest() {
+
+  System.out.println("inside checkrequest");
+
+  Mono<String> mono2 = ms2WebClient.get().uri("/checkrequestcall").retrieve().bodyToMono(String.class);
+
+  Mono<String> mono3 = ms3WebClient.get().uri("/checkrequestcall").retrieve().bodyToMono(String.class);
+
+  return Mono.zip(mono2, mono3).map(tuple -> {
+    return tuple.getT2();
+  });
+
+}
+```
+
+## [Timelimiter](https://resilience4j.readme.io/docs/timeout)
+
+This work like a timeout, as per this example 5sec is configured
+
+```
+timelimiter:
+  instances:
+    timelimiterservice:
+      timeout-duration: 5s
+      cancel-running-future: true 
+```
+Apply Time Limiter on any method with annotatations
+```
+@GetMapping(value = "/checkrequest")
+@CircuitBreaker(name = "mainService", fallbackMethod = "fallback")
+@RateLimiter(name = "ratelimiterservice", fallbackMethod = "fallback")
+@TimeLimiter(name = "timelimiterservice", fallbackMethod = "fallback")
+@Bulkhead(name = "bulkaheadservice",fallbackMethod = "fallback")
+@Retry(name="retryService")
+@Timed(value = "TestController.checkrequest",description = "checkrequest" ,histogram = true)
+public Mono<String> checkrequest() {
+
+  System.out.println("inside checkrequest");
+
+  Mono<String> mono2 = ms2WebClient.get().uri("/checkrequestcall").retrieve().bodyToMono(String.class);
+
+  Mono<String> mono3 = ms3WebClient.get().uri("/checkrequestcall").retrieve().bodyToMono(String.class);
+
+  return Mono.zip(mono2, mono3).map(tuple -> {
+    return tuple.getT2();
+  });
+
+}
+```
+
+## [Bulkahead](https://resilience4j.readme.io/docs/bulkhead)
+
+In a particular time how many request can the API Process, as per this example 30 calls
+```
+bulkhead:
+  instances:
+    bulkaheadservice:
+      max-concurrent-calls: 30
+      max-wait-duration: 0    
+  metrics:
+    enabled: true
+```
+Apply Bulkahead on any method with annotatations
+```
+@GetMapping(value = "/checkrequest")
+@CircuitBreaker(name = "mainService", fallbackMethod = "fallback")
+@RateLimiter(name = "ratelimiterservice", fallbackMethod = "fallback")
+@TimeLimiter(name = "timelimiterservice", fallbackMethod = "fallback")
+@Bulkhead(name = "bulkaheadservice",fallbackMethod = "fallback")
+@Retry(name="retryService")
+@Timed(value = "TestController.checkrequest",description = "checkrequest" ,histogram = true)
+public Mono<String> checkrequest() {
+
+  System.out.println("inside checkrequest");
+
+  Mono<String> mono2 = ms2WebClient.get().uri("/checkrequestcall").retrieve().bodyToMono(String.class);
+
+  Mono<String> mono3 = ms3WebClient.get().uri("/checkrequestcall").retrieve().bodyToMono(String.class);
+
+  return Mono.zip(mono2, mono3).map(tuple -> {
+    return tuple.getT2();
+  });
+
+}
+```
+
+## [Retry](https://resilience4j.readme.io/docs/retry)
+
+This configuration will retry the call, as per this example method will retry 3 times in a Second
+```
+resilience4j:
+  retry:
+    instances:
+      retryService:
+        max-retry-attempts: 3
+        wait-duration: 5s
+        enable-exponential-backoff: true
+        exponential-backoff-multiplier: 2
+```
+
+Apply Retry on any method with annotatations
+```
+@GetMapping(value = "/checkrequest")
+@CircuitBreaker(name = "mainService", fallbackMethod = "fallback")
+@RateLimiter(name = "ratelimiterservice", fallbackMethod = "fallback")
+@TimeLimiter(name = "timelimiterservice", fallbackMethod = "fallback")
+@Bulkhead(name = "bulkaheadservice",fallbackMethod = "fallback")
+@Retry(name="retryService")
+@Timed(value = "TestController.checkrequest",description = "checkrequest" ,histogram = true)
+public Mono<String> checkrequest() {
+
+  System.out.println("inside checkrequest");
+
+  Mono<String> mono2 = ms2WebClient.get().uri("/checkrequestcall").retrieve().bodyToMono(String.class);
+
+  Mono<String> mono3 = ms3WebClient.get().uri("/checkrequestcall").retrieve().bodyToMono(String.class);
+
+  return Mono.zip(mono2, mono3).map(tuple -> {
+    return tuple.getT2();
+  });
+
+}
+```
