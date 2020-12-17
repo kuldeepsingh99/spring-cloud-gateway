@@ -47,16 +47,72 @@ Execute this [file](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/
 
 ### Create NGINX Ingress Controller
 
-//TODO
+Execute this to deploy NGINX Ingress controller
+
+```kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/aws/deploy.yaml```
+
+Verify pod progress
+
+```kubectl get pods -n ingress-nginx -l app.kubernetes.io/name=ingress-nginx --watch```
 
 ### Install Prometheus
 
-//TODO
+Install helm chart
+
+Execute this command to deploy prometheus
+
+```helm repo add stable https://kubernetes-charts.storage.googleapis.com/```
+```helm repo update```
+
+```helm install -name prom -n monitor stable/prometheus-operator```
+
+Execute this [file](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/main/deployment/promingress.yml) to setup ingress for Prometheus
+
+```kubectl apply -f promingress.yml```
+
+Verify pod progress
+
+```kubectl get pods -n monitor```
+
+Try accessing jaeger with http://prometheus.practice.com
+
 ### Install Grafana
-//TODO
+
+Execute this command to deploy Grafana
+
+```helm install -name graph -n monitor stable/grafana```
+
+Execute this [file](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/main/deployment/grafanaingress.yml) to setup ingress for Grafana
+
+```kubectl apply -f grafanaingress.yml```
+
+Try accessing jaeger with http://grafana.practice.com
 
 ### Install Jaeger
-//TODO
+
+Execute the following command
+
+```
+kubectl create -n monitor -f https://raw.githubusercontent.com/jaegertracing/jaeger-operator/master/deploy/crds/jaegertracing.io_jaegers_crd.yaml
+kubectl create -n monitor -f https://raw.githubusercontent.com/jaegertracing/jaeger-operator/master/deploy/service_account.yaml
+kubectl create -n monitor -f https://raw.githubusercontent.com/jaegertracing/jaeger-operator/master/deploy/role.yaml
+kubectl create -n monitor -f https://raw.githubusercontent.com/jaegertracing/jaeger-operator/master/deploy/role_binding.yaml
+kubectl create -n monitor -f https://raw.githubusercontent.com/jaegertracing/jaeger-operator/master/deploy/operator.yaml
+```
+
+Execute this [file](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/main/deployment/jaeger_new.yml) to deploy jaeger
+
+```kubectl apply -f jaeger_new.yml```
+
+Execute this [file](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/main/deployment/jaegeringress.yml) to setup ingress for jaeger
+
+```kubectl apply -f jaegeringress.yml```
+
+Verify pod progress
+
+```kubectl get pods -n monitor```
+
+Try accessing jaeger with http://jaeger.practice.com
 
 ### Create Keycloak Instance
 
