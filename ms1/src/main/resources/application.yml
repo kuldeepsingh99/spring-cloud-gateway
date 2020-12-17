@@ -10,9 +10,9 @@ resilience4j:
         enable-exponential-backoff: true
         exponential-backoff-multiplier: 2
         
-  
   circuitbreaker:
-    instances:      mainService:
+    instances:
+      mainService:
         minimum-number-of-calls: 5
         permitted-number-of-calls-in-half-open-state: 2
         wait-duration-in-open-state: 10s
@@ -24,20 +24,28 @@ resilience4j:
         sliding-window-type: COUNT_BASED
     circuit-breaker-aspect-order: 2
               
-  ratelimiter:    instances:      ratelimiterservice:
+  ratelimiter:
+    instances:
+      ratelimiterservice:
         limit-for-period: 100
         limit-refresh-period: 1s
         timeout-duration: 0
         allow-health-indicator-to-fail: true
-        register-health-indicator: true            rate-limiter-aspect-order: 1
+        register-health-indicator: true        
+    rate-limiter-aspect-order: 1
   
   
-  bulkhead:    instances:      bulkaheadservice:
+  bulkhead:
+    instances:
+      bulkaheadservice:
         max-concurrent-calls: 30
         max-wait-duration: 0    
-    metrics:      enabled: true
+    metrics:
+      enabled: true
   
-  timelimiter:    instances:      timelimiterservice:
+  timelimiter:
+    instances:
+      timelimiterservice:
         timeout-duration: 5s
         cancel-running-future: true    
   
@@ -64,12 +72,20 @@ keycloak:
   bearer-only: true
   realm: cloud
 
-spring:  application:    name: ms1-app-server
-      cloud:    kubernetes:      config:        name: ms1-app-server
+spring:
+  application:
+    name: ms1-app-server
+    
+  cloud:
+    kubernetes:
+      config:
+        name: ms1-app-server
         namespace: monitor
-        sources:        - name: ms1-app-server
+        sources:
+        - name: ms1-app-server
       
-      reload:        enabled: true
+      reload:
+        enabled: true
         mode: polling
         period: 10000
         
