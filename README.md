@@ -36,28 +36,37 @@ We have deployed everything on [kubernetes](https://kubernetes.io/)
 
 Execute this [file](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/main/deployment/namespace.yml) to create namespace
 
-kubectl apply -f namespace.yml
+```kubectl apply -f namespace.yml```
 
 ### Create redis Instance
 
 Execute this [file](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/main/deployment/redis.yml) to create redis instance
 
-kubectl apply -f redis.yml
+```kubectl apply -f redis.yml```
 
 
 ### Create NGINX Ingress Controller
 
 //TODO
 
+### Install Prometheus
+
+//TODO
+### Install Grafana
+//TODO
+
+### Install Jaeger
+//TODO
+
 ### Create Keycloak Instance
 
 Execute this [file](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/main/deployment/keycloak.yml) to setup keycloak
 
-kubectl apply -f keycloak.yml
+```kubectl apply -f keycloak.yml```
 
 Execute this [file](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/main/deployment/keycloakingress.yml) to setup keycloak Ingress controller
 
-kubectl apply -f keycloakingress.yml
+```kubectl apply -f keycloakingress.yml```
 
 Note :- After Keycload is up and Running create realm and configure client
 
@@ -91,10 +100,4 @@ By Default Cluster IP is assigned to Services, and its accessible inside the CLu
 
 
 
-### Install Prometheus
 
-//TODO
-### Install Grafana
-//TODO
-
-### Install Jaeger
