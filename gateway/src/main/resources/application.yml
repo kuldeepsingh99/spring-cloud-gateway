@@ -1,0 +1,128 @@
+server:
+  port: 9090
+    
+spring:
+  cloud:
+    gateway:
+      default-filters:
+        - TokenRelay
+      routes:
+        - id: ms1_1
+          uri: http://ms1-app-server:9091/
+          predicates:
+            - Path=/ms1/**
+          filters:
+            - RewritePath=/ms2/(?<path>.*), /$\{path}
+            - name: RequestRateLimiter
+              args: 
+               redis-rate-limiter.replenishRate: 2000
+               redis-rate-limiter.burstCapacity: 4000
+               key-resolver: "#{@userRemoteAddressResolver}"
+            - name: CircuitBreaker
+              args:
+                name: backendA
+                fallbackUri: forward:/fallback/ms2
+                statusCodes:
+                  - 500
+
+            - name: CircuitBreaker
+              args:
+                name: backendA
+                fallbackUri: forward:/fallback/ms1
+                statusCodes:
+                  - 403
+                  
+        - id: ms2
+          uri: http://ms2-app-server:9092/
+          predicates:
+            - Path=/ms2/**
+          filters:
+            - RewritePath=/ms2/(?<path>.*), /$\{path}
+            - name: RequestRateLimiter
+              args: 
+               redis-rate-limiter.replenishRate: 2000
+               redis-rate-limiter.burstCapacity: 4000
+               key-resolver: "#{@userRemoteAddressResolver}"
+            - name: CircuitBreaker
+              args:
+                name: backendA
+                fallbackUri: forward:/fallback/ms2
+                statusCodes:
+                  - "500"
+        - id: ms3
+          uri: http://ms3-app-server:8085/
+          predicates:
+            - Path=/ms3/**
+          filters:
+            - RewritePath=/ms3/(?<path>.*), /$\{path}
+            - name: CircuitBreaker
+              args:
+                name: backendB
+                fallbackUri: forward:/fallback/ms3
+                statusCodes:
+                  - "500"
+
+
+  application:    name: gateway-service
+    
+  redis:    host: redis-master
+    port: 6379  
+  security:
+    oauth2:
+      client:
+        provider:
+          keycloak:
+            token-uri: http://keycloak:8080/auth/realms/cloud/protocol/openid-connect/token
+            authorization-uri: http://keycloak:8080/auth/realms/cloud/protocol/openid-connect/auth
+            user-name-attribute: preferred_username
+            user-info-uri: http://keycloak:8080/auth/realms/cloud/protocol/openid-connect/userinfo
+            
+            
+        registration:
+          spring-cloud-test:
+            provider: keycloak
+            client-id: spring-cloud-test
+            client-secret: 5d301d6d-99f2-4995-bb12-2405dd98d669
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/keycloak"
+                
+management:  endpoints:    web:      exposure:        include:        - '*'  endpoint:    health:      show-details: always
+
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      register-health-indicator: true
+      sliding-window-size: 10
+      sliding-window-type: COUNT_BASED
+      minimum-number-of-calls: 5
+      writable-stack-trace-enabled: true     
+      permitted-number-of-calls-in-half-open-state: 2
+      automatic-transition-from-open-to-half-open-enabled: true
+      wait-duration-in-open-state: 10s
+      failure-rate-threshold: 50
+  instances:
+    backendA:
+      baseConfig: default
+
+    backendB:
+      register-health-indicator: true
+      sliding-window-size: 10
+      sliding-window-type: COUNT_BASED
+      minimum-number-of-calls: 5
+      writable-stack-trace-enabled: true     
+      permitted-number-of-calls-in-half-open-state: 2
+      automatic-transition-from-open-to-half-open-enabled: true
+      wait-duration-in-open-state: 10s
+      failure-rate-threshold: 50
+
+
+opentracing:
+  jaeger:
+    enabled: true
+    udp-sender:
+      host: simplest-agent
+      port: 6831 
+    enable-b3-propagation: true
+    log-spans: true
+    const-sampler:
+      decision: true
