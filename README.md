@@ -67,7 +67,30 @@ Note :- After Keycload is up and Running create realm and configure client
 
 ### Create Microservices instance
 
-//TODO
+Execute this [micro service 1 Config Map](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/main/deployment/ms1configmap.yml) file to create config Map for micro service 1, this is used to inject other service URL and Port
+
+We can create config map based on environment and we don't have to change code on different envoronments 
+
+```kubectl apply -f ms1configmap.yml```
+
+Execute this [micro service 1](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/main/deployment/ms1.yml) file to create micro service 1 instance
+
+```kubectl apply -f ms1.yml```
+
+Execute this [micro service 2](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/main/deployment/ms2.yml) file to create micro service 2 instance
+
+```kubectl apply -f ms2.yml```
+
+Execute this [micro service 3](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/main/deployment/ms3.yml) file to create micro service 3 instance
+
+```kubectl apply -f ms3.yml```
+
+By Default Cluster IP is assigned to Services, and its accessible inside the CLuster only. We need to create ingress controller so that its accessible from outside
+
+
+
+
+
 ### Install Prometheus
 
 //TODO
