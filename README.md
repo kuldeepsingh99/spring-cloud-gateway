@@ -74,7 +74,7 @@ Configure this on Path
       - 403
 ```
 
-Configure the Circuit Breaker
+Configure the Circuit Breaker Properties
 ```
 resilience4j.circuitbreaker:
   configs:
@@ -120,3 +120,18 @@ public ReactiveResilience4JCircuitBreakerFactory reactiveResilience4JCircuitBrea
 }
 ```
 
+#### Distributed Tracing with Jaager
+
+Add these to enable distributed tracing
+```
+opentracing:
+  jaeger:
+    enabled: true
+    udp-sender:
+      host: simplest-agent
+      port: 6831 
+    enable-b3-propagation: true
+    log-spans: true
+    const-sampler:
+      decision: true
+```
