@@ -7,7 +7,7 @@
 * Prometheus endpoint is also enabled
 * Keycload is also enabled for token validation
 
-## Circuit Breaker
+## [Circuit Breaker](https://resilience4j.readme.io/docs/circuitbreaker)
 
 Configure the Cricuit breaker configuration
 ```
@@ -274,3 +274,48 @@ opentracing:
     const-sampler:
       decision: true
 ```
+
+## How to enable keycloak in Spring boot
+
+Add these dependencies to pom.xml, this may be different if we don't have Spring Cloud Gateway
+```
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-security</artifactId>
+</dependency>
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-oauth2-client</artifactId>
+</dependency>
+<dependency>
+  <groupId>org.keycloak</groupId>
+  <artifactId>keycloak-spring-security-adapter</artifactId>
+  <version>6.0.1</version>
+</dependency>
+```
+
+Add these in application.yml
+
+```
+keycloak:
+  auth-server-url: http://keycloak:8080/auth/
+  resource: spring-cloud-test
+  credentials:
+    secret : 5d301d6d-99f2-4995-bb12-2405dd98d669
+  use-resource-role-mappings : true
+  principal-attribute: preferred_username
+  bearer-only: true
+  realm: cloud
+```
+
+
+```
+@Bean
+public KeycloakSpringBootConfigResolver keycloakSpringBootConfigResolver()
+{
+    return new KeycloakSpringBootConfigResolver();
+}
+```
+
+Configure this class
+[Security Config](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/dc7a833c56e185d06de4b107b3917c97d71a726a/ms1/src/main/java/com/portal/ms1/SecurityConfig.java#L20) for keycload and role mapping
