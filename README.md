@@ -32,20 +32,20 @@ We have deployed everything on [kubernetes](https://kubernetes.io/)
 
 ## Steps for Deployment
 
-### Creating NameSpace
+#### Creating NameSpace
 
 Execute this [file](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/main/deployment/namespace.yml) to create namespace
 
 ```kubectl apply -f namespace.yml```
 
-### Create redis Instance
+#### Create redis Instance
 
 Execute this [file](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/main/deployment/redis.yml) to create redis instance
 
 ```kubectl apply -f redis.yml```
 
 
-### Create NGINX Ingress Controller
+#### Create NGINX Ingress Controller
 
 Execute this to deploy NGINX Ingress controller
 
@@ -55,7 +55,7 @@ Verify pod progress
 
 ```kubectl get pods -n ingress-nginx -l app.kubernetes.io/name=ingress-nginx --watch```
 
-### Install Prometheus
+#### Install Prometheus
 
 Install helm chart
 
@@ -78,7 +78,7 @@ Verify pod progress
 
 Try accessing jaeger with http://prometheus.practice.com
 
-### Install Grafana
+#### Install Grafana
 
 Execute this command to deploy Grafana
 
@@ -90,7 +90,7 @@ Execute this [file](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/
 
 Try accessing jaeger with http://grafana.practice.com
 
-### Install Jaeger
+#### Install Jaeger
 
 Execute the following command
 
@@ -116,7 +116,7 @@ Verify pod progress
 
 Try accessing jaeger with http://jaeger.practice.com
 
-### Create Keycloak Instance
+#### Create Keycloak Instance
 
 Execute this [file](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/main/deployment/keycloak.yml) to setup keycloak
 
@@ -129,7 +129,7 @@ Execute this [file](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/
 Note :- After Keycload is up and Running create realm and configure client
 
 
-### Create Gateway Instance
+#### Create Gateway Instance
 
 Execute this [gateway](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/main/deployment/gateway.yml) file to create gateway instance
 
@@ -149,7 +149,7 @@ Execute this [gateway service monitor](https://github.com/kuldeepsingh99/spring-
 
 Check the target in Prometheus
 
-### Create Microservices instance
+#### Create Microservices instance
 
 Execute this [micro service 1 config map](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/main/deployment/ms1configmap.yml) file to create config Map for micro service 1, this is used to inject other service URL and Port
 
@@ -184,3 +184,14 @@ kubectl apply -f ms3servicemonitor.yml
 
 Verify the Target in Prometheus
 
+#### Loki
+
+[Loki](https://grafana.com/oss/loki/) is a log aggregation system inspired by Prometheus.
+
+Excecute this command to install loki
+
+```
+helm repo add loki https://grafana.github.io/loki/charts
+helm repo update
+helm install loki-stack loki/loki-stack --namespace monitor --set promtail.enabled=true,loki.persistence.enabled=true,loki.persistence.size=1Gi
+```
