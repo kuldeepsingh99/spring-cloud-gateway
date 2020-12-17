@@ -1,0 +1,86 @@
+server:
+  port: 9091
+  
+resilience4j:
+  retry:
+    instances:
+      retryService:
+        max-retry-attempts: 3
+        wait-duration: 5s
+        enable-exponential-backoff: true
+        exponential-backoff-multiplier: 2
+        
+  
+  circuitbreaker:
+    instances:      mainService:
+        minimum-number-of-calls: 5
+        permitted-number-of-calls-in-half-open-state: 2
+        wait-duration-in-open-state: 10s
+        failure-rate-threshold: 50
+        event-consumer-buffer-size: 10
+        automatic-transition-from-open-to-half-open-enabled: true
+        register-health-indicator: true
+        sliding-window-size: 10
+        sliding-window-type: COUNT_BASED
+    circuit-breaker-aspect-order: 2
+              
+  ratelimiter:    instances:      ratelimiterservice:
+        limit-for-period: 100
+        limit-refresh-period: 1s
+        timeout-duration: 0
+        allow-health-indicator-to-fail: true
+        register-health-indicator: true            rate-limiter-aspect-order: 1
+  
+  
+  bulkhead:    instances:      bulkaheadservice:
+        max-concurrent-calls: 30
+        max-wait-duration: 0    
+    metrics:      enabled: true
+  
+  timelimiter:    instances:      timelimiterservice:
+        timeout-duration: 5s
+        cancel-running-future: true    
+  
+      
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+        - '*'
+  endpoint:
+    health:
+      show-details: always
+    
+
+
+keycloak:
+  auth-server-url: http://keycloak:8080/auth/
+  resource: spring-cloud-test
+  credentials:
+    secret : 5d301d6d-99f2-4995-bb12-2405dd98d669
+  use-resource-role-mappings : true
+  principal-attribute: preferred_username
+  bearer-only: true
+  realm: cloud
+
+spring:  application:    name: ms1-app-server
+      cloud:    kubernetes:      config:        name: ms1-app-server
+        namespace: monitor
+        sources:        - name: ms1-app-server
+      
+      reload:        enabled: true
+        mode: polling
+        period: 10000
+        
+opentracing:
+  jaeger:
+    enabled: true
+    service-name: ms1-app-server
+    udp-sender:
+      host: simplest-agent
+      port: 6831 
+    enable-b3-propagation: true
+    log-spans: true
+    const-sampler:
+      decision: true
