@@ -1,0 +1,16 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: promotheus-info-ingress
+  namespace: monitor
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+    - host: promotheus.practice.com
+      http:
+        paths:
+        - path: /
+          backend:
+            serviceName: prom-prometheus-operator-prometheus
+            servicePort: 9090      

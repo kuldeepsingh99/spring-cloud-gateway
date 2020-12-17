@@ -1,0 +1,11 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: ms1-app-server
+  namespace: monitor
+data:
+  application.properties: |
+   ms2.serviceurl=ms2-app-server
+   ms2.serviceurl.port=9092
+   ms3.serviceurl=ms3-app-server
+   ms3.serviceurl.port=8085

@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: keycloak-ingress
+  namespace: monitor
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+    - host: keycloak
+      http:
+        paths:
+        - path: /
+          backend:
+            serviceName: keycloak
+            servicePort: 8080
+              

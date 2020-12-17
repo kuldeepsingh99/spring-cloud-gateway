@@ -1,0 +1,39 @@
+apiVersion: apps/v1           # API version
+kind: Deployment              # Type of kubernetes resource
+metadata:
+  name: gateway-app-server    # Name of the kubernetes resource
+  namespace: monitor
+  labels:                     # Labels that will be applied to this resource
+    app: gateway-app-server
+spec:
+  replicas: 1                 # No. of replicas/pods to run in this deployment
+  selector:
+    matchLabels:              # The deployment applies to any pods mayching the specified labels
+      app: gateway-app-server
+  template:                   # Template for creating the pods in this deployment
+    metadata:
+      labels:                 # Labels that will be applied to each Pod in this deployment
+        app: gateway-app-server
+    spec:                     # Spec for the containers that will be run in the Pods
+      containers:
+      - name: gateway-app-server
+        image: gateway:v1
+        imagePullPolicy: IfNotPresent
+        ports:
+          - name: http
+            containerPort: 9090 # The port that the container exposes
+---
+apiVersion: v1                # API version
+kind: Service                 # Type of the kubernetes resource
+metadata:
+  name: gateway-app-server    # Name of the kubernetes resource
+  namespace: monitor
+  labels:                     # Labels that will be applied to this resource
+    app: gateway-app-server
+spec:
+  selector:
+    app: gateway-app-server   # The service exposes Pods with label `app=gateway-app-server`
+  ports:                      # Forward incoming connections on port 9090 to the target port 8080
+  - name: http
+    port: 9090
+    targetPort: 9090

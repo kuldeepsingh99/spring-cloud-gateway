@@ -1,0 +1,16 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: ms1-app-server
+  namespace: monitor
+  labels:
+    release: prom
+spec:
+  selector:
+    matchLabels:
+      app: ms1-app-server
+  endpoints:
+  - port: http
+    path: '/actuator/prometheus'
+    interval: 5s
+  

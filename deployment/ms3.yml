@@ -1,0 +1,43 @@
+apiVersion: apps/v1           # API version
+kind: Deployment              # Type of kubernetes resource
+metadata:
+  name: ms3-app-server    # Name of the kubernetes resource
+  namespace: monitor
+  labels:                     # Labels that will be applied to this resource
+    app: ms3-app-server
+spec:
+  replicas: 1                 # No. of replicas/pods to run in this deployment
+  selector:
+    matchLabels:              # The deployment applies to any pods mayching the specified labels
+      app: ms3-app-server
+  template:                   # Template for creating the pods in this deployment
+    metadata:
+      labels:                 # Labels that will be applied to each Pod in this deployment
+        app: ms3-app-server
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8085"
+        prometheus.io/path: "/actuator/prometheus"
+    spec:                     
+      containers:
+      - name: ms3-app-server
+        image: ms3:v1
+        imagePullPolicy: IfNotPresent
+        ports:
+          - name: http
+            containerPort: 8085 # The port that the container exposes
+---
+apiVersion: v1                # API version
+kind: Service                 # Type of the kubernetes resource
+metadata:
+  name: ms3-app-server    # Name of the kubernetes resource
+  namespace: monitor
+  labels:                     # Labels that will be applied to this resource
+    app: ms3-app-server
+spec:
+  selector:
+    app: ms3-app-server   # The service exposes Pods with label `app=gateway-app-server`
+  ports:                      # Forward incoming connections on port 9090 to the target port 8080
+  - name: http
+    port: 8085
+    targetPort: 8085
