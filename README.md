@@ -137,9 +137,17 @@ Execute this [gateway](https://github.com/kuldeepsingh99/spring-cloud-gateway/bl
 
 Execute this [gateway ingress](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/main/deployment/gatewayingress.yml) file to create gateway ingress
 
-```kubectl apply -f gatewayingress.ym```
+```kubectl apply -f gatewayingress.yml```
 
 Try accessing http://test.practice.com
+
+How Prometheus know where to scrap prometheus end, we need to create service monitor
+
+Execute this [gateway service monitor](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/main/deployment/gatewayservicemonitor.yml) file to create gateway service monitor
+
+```kubectl apply -f gatewayservicemonitor.yml```
+
+Check the target in Prometheus
 
 ### Create Microservices instance
 
@@ -165,6 +173,14 @@ Verify pod progress
 
 ```kubectl get pods -n monitor```
 
+Create service Monitor for these services [micro service 1](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/main/deployment/ms1servicemonitor.yml), [micro service 2](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/main/deployment/ms2servicemonitor.yml) and [micro service 3](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/main/deployment/ms3servicemonitor.yml)
 
 
+```
+kubectl apply -f ms1servicemonitor.yml
+kubectl apply -f ms2servicemonitor.yml
+kubectl apply -f ms3servicemonitor.yml
+```
+
+Verify the Target in Prometheus
 
