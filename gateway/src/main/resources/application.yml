@@ -63,10 +63,13 @@ spring:
                   - "500"
 
 
-  application:    name: gateway-service
+  application:
+    name: gateway-service
     
-  redis:    host: redis-master
-    port: 6379  
+  redis:
+    host: redis-master
+    port: 6379
+  
   security:
     oauth2:
       client:
@@ -84,9 +87,19 @@ spring:
             client-id: spring-cloud-test
             client-secret: 5d301d6d-99f2-4995-bb12-2405dd98d669
             authorization-grant-type: authorization_code
-            redirect-uri: "{baseUrl}/login/oauth2/code/keycloak"
-                
-management:  endpoints:    web:      exposure:        include:        - '*'  endpoint:    health:      show-details: always
+            redirect-uri: "{baseUrl}/login/oauth2/code/keycloak"
+
+    
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+        - '*'
+  endpoint:
+    health:
+      show-details: always
+
 
 resilience4j.circuitbreaker:
   configs:
