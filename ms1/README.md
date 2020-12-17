@@ -210,3 +210,67 @@ public Mono<String> checkrequest() {
 
 }
 ```
+
+## Aggregate Pattern
+
+As we have used web reactive Library (WebFlux) on all the microservice, so the below mentioned tto calls to MS2 Service and M23 Service wil go in parallel
+
+```
+public Mono<String> checkrequest() {
+
+  System.out.println("inside checkrequest");
+
+  Mono<String> mono2 = ms2WebClient.get().uri("/checkrequestcall").retrieve().bodyToMono(String.class);
+
+  Mono<String> mono3 = ms3WebClient.get().uri("/checkrequestcall").retrieve().bodyToMono(String.class);
+
+  return Mono.zip(mono2, mono3).map(tuple -> {
+    return tuple.getT2();
+  });
+}
+```
+
+## Spring Micrometer with prometheus
+
+@Timed annotation is used to track the method calls in prometheus
+
+```
+@Timed(value = "TestController.checkrequest",description = "checkrequest" ,histogram = true)
+public Mono<String> checkrequest() {
+```
+
+```
+@Bean
+MeterRegistryCustomizer meterRegistryCustomizer(MeterRegistry meterRegistry) {
+  return meterRegistry1 -> {
+    meterRegistry.config()
+        .commonTags("application", "micrometer-monitoring-example");
+  };
+}
+
+@Bean
+  TimedAspect timedAspect(MeterRegistry reg) {
+      return new TimedAspect(reg);
+  }
+```
+
+These two things are required to configure Spring micrometer
+
+
+## Distributed Tracking with Jaeger
+
+Add these in application.yml to enable distributed tracing
+
+```
+opentracing:
+  jaeger:
+    enabled: true
+    service-name: ms1-app-server
+    udp-sender:
+      host: simplest-agent
+      port: 6831 
+    enable-b3-propagation: true
+    log-spans: true
+    const-sampler:
+      decision: true
+```
