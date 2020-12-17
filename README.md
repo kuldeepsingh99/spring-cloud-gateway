@@ -4,10 +4,10 @@
 
 ## This project contains 4 Spring boot Projects and Keycloak for access and identity management
 
-* Gateway
-* Micro Service 1
-* Micro Service 2
-* Micro Service 3
+* [Gateway](https://github.com/kuldeepsingh99/spring-cloud-gateway/tree/main/gateway)  - (This is an API Gateway, where spring cloud gateway is used with Resilience4j and keycloak integration)
+* [Micro Service 1](https://github.com/kuldeepsingh99/spring-cloud-gateway/tree/main/ms1)  - (This is a reative microservice where Resilience4j patterns are implemented with keycloak integration)
+* [Micro Service 2](https://github.com/kuldeepsingh99/spring-cloud-gateway/tree/main/ms2)  - (This is a reative microservice)
+* [Micro Service 3](https://github.com/kuldeepsingh99/spring-cloud-gateway/tree/main/ms3)  - (This is a reative microservice)
 
 ## Libraries and Tech Stack
 
