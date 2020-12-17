@@ -1,0 +1,25 @@
+server:
+  port: 9092
+  
+spring:  application:    name: ms2-app-server
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+        - '*'
+  endpoint:
+    health:
+      show-details: always
+
+opentracing:
+  jaeger:
+    enabled: true
+    service-name: ms2-app-server
+    udp-sender:
+      host: simplest-agent
+      port: 6831 
+    enable-b3-propagation: true
+    log-spans: true
+    const-sampler:
+      decision: true
