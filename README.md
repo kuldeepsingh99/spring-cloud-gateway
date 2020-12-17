@@ -35,13 +35,14 @@ kubectl apply -f namespace.yml
 
 ### Create redis Instance
 
-Execute this [file](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/main/deployment/redis.yml) to create namespace
+Execute this [file](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/main/deployment/redis.yml) to create redis instance
 
 kubectl apply -f redis.yml
 
 
 ### Create NGINX Ingress Controller
 
+//TODO
 
 ### Create Keycloak Instance
 
@@ -56,3 +57,16 @@ kubectl apply -f keycloakingress.yml
 Note :- After Keycload is up and Running create realm and configure client
 
 
+### Create Gateway Instance
+//TODO
+
+### Create Microservices instance
+
+//TODO
+### Install Prometheus
+
+//TODO
+### Install Grafana
+//TODO
+
+### Install Jaeger
