@@ -61,8 +61,10 @@ Install helm chart
 
 Execute this command to deploy prometheus
 
-```helm repo add stable https://kubernetes-charts.storage.googleapis.com/```
-```helm repo update```
+```
+helm repo add stable https://kubernetes-charts.storage.googleapis.com/
+helm repo update
+```
 
 ```helm install -name prom -n monitor stable/prometheus-operator```
 
@@ -128,11 +130,20 @@ Note :- After Keycload is up and Running create realm and configure client
 
 
 ### Create Gateway Instance
-//TODO
+
+Execute this [gateway](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/main/deployment/gateway.yml) file to create gateway instance
+
+```kubectl apply -f gateway.yml```
+
+Execute this [gateway ingress](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/main/deployment/gatewayingress.yml) file to create gateway ingress
+
+```kubectl apply -f gatewayingress.ym```
+
+Try accessing http://test.practice.com
 
 ### Create Microservices instance
 
-Execute this [micro service 1 Config Map](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/main/deployment/ms1configmap.yml) file to create config Map for micro service 1, this is used to inject other service URL and Port
+Execute this [micro service 1 config map](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/main/deployment/ms1configmap.yml) file to create config Map for micro service 1, this is used to inject other service URL and Port
 
 We can create config map based on environment and we don't have to change code on different envoronments 
 
@@ -150,9 +161,9 @@ Execute this [micro service 3](https://github.com/kuldeepsingh99/spring-cloud-ga
 
 ```kubectl apply -f ms3.yml```
 
-By Default Cluster IP is assigned to Services, and its accessible inside the CLuster only. We need to create ingress controller so that its accessible from outside
+Verify pod progress
 
-
+```kubectl get pods -n monitor```
 
 
 
