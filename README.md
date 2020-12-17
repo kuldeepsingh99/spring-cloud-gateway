@@ -20,6 +20,11 @@
 * [Grafana](https://grafana.com/) - for monitoring
 * [Loki](https://grafana.com/docs/loki/latest/getting-started/get-logs-into-loki/) - for log monitoring
 
+## GateWay and Microservice Configuration
+
+Please refer [Gateway](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/main/gateway/README.md) readme for Spring Cloud Gateway, Resilience4j and Keycloak configuration
+
+Please refer [Micro service 1](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/main/ms1/README.md) readme for Resilience4j and Keycloak configuration
 
 ## Deployment 
 
