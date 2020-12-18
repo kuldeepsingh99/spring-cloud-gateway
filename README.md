@@ -197,3 +197,12 @@ helm repo add loki https://grafana.github.io/loki/charts
 helm repo update
 helm install loki-stack loki/loki-stack --namespace monitor --set promtail.enabled=true,loki.persistence.enabled=true,loki.persistence.size=1Gi
 ```
+
+#### Pods
+![](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/main/img/pod.PNG)
+
+#### Service
+![](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/main/img/svc.PNG)
+
+#### Service Monitor
+![](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/main/img/servicemonitor.PNG)
