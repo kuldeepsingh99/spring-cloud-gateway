@@ -22,6 +22,8 @@
 
 ## GateWay and Microservice Configuration
 
+Please refer [Keycload](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/main/gateway/keycloak.md) readme Keycloak configuration
+
 Please refer [Gateway](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/main/gateway/README.md) readme for Spring Cloud Gateway, Resilience4j and Keycloak configuration
 
 Please refer [Micro service 1](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/main/ms1/README.md) readme for Resilience4j and Keycloak configuration
