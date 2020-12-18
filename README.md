@@ -22,11 +22,17 @@
 
 ## GateWay and Microservice Configuration
 
-Please refer [Keycload](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/main/gateway/keycloak.md) readme Keycloak configuration
+Please refer [Keycloak](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/main/gateway/keycloak.md) readme Keycloak configuration
 
 Please refer [Gateway](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/main/gateway/README.md) readme for Spring Cloud Gateway, Resilience4j and Keycloak configuration
 
 Please refer [Micro service 1](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/main/ms1/README.md) readme for Resilience4j and Keycloak configuration
+
+Please refer [Grafana](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/main/grafana.md) how to configure datasources
+
+Please refer [Prometheus](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/main/prometheus.md) for prometheus details
+
+Please refer [Jaeger](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/main/jaeger.md) for jaeger details
 
 ## Deployment 
 
