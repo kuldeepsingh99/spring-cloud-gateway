@@ -65,8 +65,6 @@ Verify pod progress
 
 #### Install Prometheus
 
-Install helm chart
-
 Execute this command to deploy prometheus
 
 ```
@@ -84,7 +82,7 @@ Verify pod progress
 
 ```kubectl get pods -n monitor```
 
-Try accessing jaeger with http://prometheus.practice.com
+Try accessing Prometheus with http://prometheus.practice.com
 
 #### Install Grafana
 
@@ -96,7 +94,7 @@ Execute this [file](https://github.com/kuldeepsingh99/spring-cloud-gateway/blob/
 
 ```kubectl apply -f grafanaingress.yml```
 
-Try accessing jaeger with http://grafana.practice.com
+Try accessing Grafana with http://grafana.practice.com
 
 #### Install Jaeger
 
